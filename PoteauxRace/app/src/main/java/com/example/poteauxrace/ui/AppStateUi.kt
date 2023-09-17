@@ -1,0 +1,7 @@
+package com.example.poteauxrace.ui
+
+data class AppStateUi(
+    val isGameLaunched: Boolean = false,
+    val isTeamChosen : Boolean = false,
+    val teamNumber: Int? = null,
+    )
