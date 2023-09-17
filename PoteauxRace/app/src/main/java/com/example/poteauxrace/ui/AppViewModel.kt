@@ -11,6 +11,9 @@ class AppViewModel : ViewModel() {
     val uiState: StateFlow<AppStateUi> = _uiState.asStateFlow()
 
     fun updateTeam(teamId: Int) {
-        _uiState.update { appStateUi -> appStateUi.copy(teamId = teamId)  }
+        _uiState.update { appStateUi -> appStateUi.copy(teamId = teamId, isTeamChosen = true)  }
+    }
+    fun updateGameStatus(status : Boolean = true) {
+        _uiState.update { appStateUi: AppStateUi -> appStateUi.copy(isGameLaunched = status ) }
     }
 }

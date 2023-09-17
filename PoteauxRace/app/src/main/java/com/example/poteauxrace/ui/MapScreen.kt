@@ -11,16 +11,16 @@ import androidx.compose.ui.Modifier
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MapScreen(modifier :Modifier = Modifier) {
-    Scaffold() { it ->
+fun MapScreen(modifier :Modifier = Modifier, onButtonClicked: () -> Unit) {
+    Scaffold(floatingActionButton = {ClaimButton(modifier = Modifier, onButtonClicked = {onButtonClicked})} ) { it ->
         Box(modifier = Modifier.padding(it)) {
             Text(text = "WIP")
         }
     }
 }
 @Composable
-fun ClaimButton(modifier: Modifier= Modifier) {
-    Button(onClick = { /*TODO*/ }) {
+fun ClaimButton(modifier: Modifier= Modifier, onButtonClicked: () -> Unit) {
+    Button(onClick = onButtonClicked) {
         //Icon(painter = null, contentDescription = null)
 
     }
