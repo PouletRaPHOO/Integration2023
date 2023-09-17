@@ -17,17 +17,32 @@ fun ClaimPanel(
     modifier : Modifier = Modifier,
     onNextButtonClicked : () -> Unit,
     onCancelButtonClicked: () -> Unit,
+    viewModel: AppViewModel,
+    mode : Int = 0
     ) {
     Column(modifier = Modifier.fillMaxSize()){
-        Text(text= "Nombre de Poteaux")
-        TextField(value = "Nombre de Poteaux", onValueChange = {})
-        Row( modifier = Modifier.fillMaxWidth()){
-            Button(onClick = onCancelButtonClicked) {
-                Text(text = "Cancel")
+        Row (modifier = Modifier.fillMaxWidth()) {
+            Button(modifier = Modifier.weight(0.5f), onClick = {viewModel.updateClaimScreen(0)}) {
+                Text("Poteaux")
             }
-            Button(onClick = onNextButtonClicked) {
-                Text(text = "Confirm")
+            Button(modifier = Modifier.weight(0.5f), onClick = {viewModel.updateClaimScreen(1)}) {
+                Text("Monuments")
             }
+        }
+        if (mode == 0) {
+            Text(text= "Nombre de Poteaux")
+            TextField(value = "Nombre de Poteaux", onValueChange = {})
+            Row( modifier = Modifier.fillMaxWidth()){
+                Button(onClick = onCancelButtonClicked) {
+                    Text(text = "Cancel")
+                }
+                Button(onClick = onNextButtonClicked) {
+                    Text(text = "Confirm")
+                }
+            }
+
+        } else {
+            Text(text= "Ouais la jsp pas encore mais y'aura un truc je crois")
         }
 
     }

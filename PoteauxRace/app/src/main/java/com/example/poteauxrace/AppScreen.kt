@@ -14,7 +14,7 @@ import com.example.poteauxrace.ui.MapScreen
 import com.example.poteauxrace.ui.TeamSelect
 import com.example.poteauxrace.ui.WaitingScreen
 
-enum class AppScreen() {
+enum class AppScreen {
     TeamSelect,
     WaitingForStart,
     MainScreen,
@@ -39,8 +39,8 @@ fun App(modifier : Modifier = Modifier, viewModel : AppViewModel = viewModel()) 
     ) {
         composable(route = AppScreen.TeamSelect.name) {
             TeamSelect(
-                onButtonClicked = {it ->
-                    viewModel.updateTeam(it)
+                onButtonClicked = {teamId : Int ->
+                    viewModel.updateTeam(teamId)
                     if (uiState.isGameLaunched) {
                         navController.navigate(route = AppScreen.MainScreen.name)
                     } else {
@@ -66,11 +66,12 @@ fun App(modifier : Modifier = Modifier, viewModel : AppViewModel = viewModel()) 
         composable(route = AppScreen.Claim.name ) {
             ClaimPanel(
                 onNextButtonClicked = {
-                        navController.navigate(AppScreen.MainScreen.name)
+                        navController.popBackStack(AppScreen.MainScreen.name, inclusive = false)
                 },
                 onCancelButtonClicked = {
-                    navController.navigate(route = AppScreen.MainScreen.name)
-                }
+                    navController.popBackStack(route = AppScreen.MainScreen.name, inclusive = false)
+                },
+                viewModel = viewModel
             )
         }
     }

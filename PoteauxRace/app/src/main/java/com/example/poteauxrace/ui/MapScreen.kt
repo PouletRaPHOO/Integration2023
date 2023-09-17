@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen(modifier :Modifier = Modifier, onButtonClicked: () -> Unit) {
-    Scaffold(floatingActionButton = {ClaimButton(modifier = Modifier, onButtonClicked = {onButtonClicked})} ) { it ->
-        Box(modifier = Modifier.padding(it)) {
+    Scaffold(floatingActionButton = {ClaimButton(modifier = Modifier, onButtonClicked = onButtonClicked)} ) { paddingValues ->
+        Box(modifier = Modifier.padding(paddingValues)) {
             Text(text = "WIP")
         }
     }

@@ -16,4 +16,8 @@ class AppViewModel : ViewModel() {
     fun updateGameStatus(status : Boolean = true) {
         _uiState.update { appStateUi: AppStateUi -> appStateUi.copy(isGameLaunched = status ) }
     }
+
+    fun updateClaimScreen(mode : Int = 0) {
+        _uiState.update { appStateUi: AppStateUi -> appStateUi.copy(claimMode = mode ) }
+    }
 }
