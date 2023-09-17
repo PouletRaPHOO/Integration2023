@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppScreen(modifier :Modifier = Modifier) {
+fun MapScreen(modifier :Modifier = Modifier) {
     Scaffold() { it ->
         Box(modifier = Modifier.padding(it)) {
             Text(text = "WIP")
