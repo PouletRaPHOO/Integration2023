@@ -5,4 +5,6 @@ data class AppStateUi(
     val isTeamChosen : Boolean = false,
     val teamId: Int? = null,
     val claimMode : Int = 0,
+    val potNumberField : String = "",
+    val isEntryPotWrong : Boolean = false
     )

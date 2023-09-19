@@ -21,17 +21,20 @@ import androidx.compose.ui.unit.sp
 
 
 @Composable
-fun TeamSelect(modifier : Modifier = Modifier, onButtonClicked : (Int) -> Unit) {
+fun TeamSelect(modifier : Modifier = Modifier, onButtonClicked : (Int) -> Unit, onDetectClicked: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = "Choose your team", fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, fontSize = 24.sp, modifier = Modifier.padding(12.dp))
-        Spacer(modifier = Modifier.height(36.dp))
-        TeamButton(teamId = 0, teamName = "Red", onButtonClicked = onButtonClicked)
-        TeamButton(teamId = 1, teamName = "Blue", onButtonClicked = onButtonClicked)
-        TeamButton(teamId = 2, teamName = "Green", onButtonClicked = onButtonClicked)
-        TeamButton(teamId = 3, teamName = "Yellow", onButtonClicked = onButtonClicked)
-        TeamButton(teamId = 4, teamName = "Violet", onButtonClicked = onButtonClicked)
-
-
+        Spacer(modifier = Modifier.height(24.dp))
+        Column() {
+            TeamButton(teamId = 0, teamName = "Red", onButtonClicked = onButtonClicked)
+            TeamButton(teamId = 1, teamName = "Blue", onButtonClicked = onButtonClicked)
+            TeamButton(teamId = 2, teamName = "Green", onButtonClicked = onButtonClicked)
+            TeamButton(teamId = 3, teamName = "Yellow", onButtonClicked = onButtonClicked)
+            TeamButton(teamId = 4, teamName = "Violet", onButtonClicked = onButtonClicked)
+        }
+        Button(onClick = onDetectClicked) {
+            Text(text = "Detecter changement de Game")
+        }
     }
 }
 

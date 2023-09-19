@@ -12,7 +12,6 @@ import com.example.poteauxrace.ui.AppViewModel
 import com.example.poteauxrace.ui.ClaimPanel
 import com.example.poteauxrace.ui.MapScreen
 import com.example.poteauxrace.ui.TeamSelect
-import com.example.poteauxrace.ui.WaitingScreen
 
 enum class AppScreen {
     TeamSelect,
@@ -35,7 +34,7 @@ fun App(modifier : Modifier = Modifier, viewModel : AppViewModel = viewModel()) 
     NavHost(
         navController = navController,
         modifier = Modifier,
-        startDestination = destination
+        startDestination = AppScreen.MainScreen.name
     ) {
         composable(route = AppScreen.TeamSelect.name) {
             TeamSelect(
@@ -46,16 +45,29 @@ fun App(modifier : Modifier = Modifier, viewModel : AppViewModel = viewModel()) 
                     } else {
                         navController.navigate(route = AppScreen.WaitingForStart.name)
                     }
+                },
+                onDetectClicked = {
+                    /* runBlocking {
+                        async {
+                            var isGameLaunched : Boolean = viewModel.gamelaunchRequest()
+                        }
+                        if (isGameLaunched.await()) {
+                            viewModel.updateGameStatus(true)
+                            navController.navigate(AppScreen.MainScreen.name)
+                        }
+                    }*/
+
                 }
             )
         }
-        composable(route = AppScreen.WaitingForStart.name) {
+        /*composable(route = AppScreen.WaitingForStart.name) {
             WaitingScreen(modifier = Modifier ,
                 onGameLaunched = {
                     viewModel.updateGameStatus(true)
                     navController.navigate(route = AppScreen.MainScreen.name)
-                })
-        }
+                }
+            )
+        }*/
         composable(route = AppScreen.MainScreen.name) {
             MapScreen(modifier = Modifier,
                 onButtonClicked = {
@@ -71,7 +83,10 @@ fun App(modifier : Modifier = Modifier, viewModel : AppViewModel = viewModel()) 
                 onCancelButtonClicked = {
                     navController.popBackStack(route = AppScreen.MainScreen.name, inclusive = false)
                 },
-                viewModel = viewModel
+                viewModel = viewModel,
+                mode = uiState.claimMode,
+                potFieldValue = uiState.potNumberField,
+                onPotChange = {it : String -> viewModel.onPotChange(it) }
             )
         }
     }
