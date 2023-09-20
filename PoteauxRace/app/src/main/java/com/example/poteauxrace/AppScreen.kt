@@ -71,6 +71,9 @@ fun App(modifier : Modifier = Modifier, viewModel : AppViewModel = viewModel()) 
                 },
                 onButtonObjClicked = {
                     navController.navigate(route = AppScreen.ObjectiveList.name)
+                },
+                onButtonRefreshClicked = {
+                    viewModel.updateRequest()
                 }
             )
         }
@@ -83,6 +86,7 @@ fun App(modifier : Modifier = Modifier, viewModel : AppViewModel = viewModel()) 
                     }
                 },
                 onCancelButtonClicked = {
+                    viewModel.onCancelPot()
                     navController.popBackStack(route = AppScreen.MainScreen.name, inclusive = false)
                 },
                 viewModel = viewModel,

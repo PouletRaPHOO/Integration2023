@@ -1,10 +1,17 @@
 package com.example.poteauxrace.ui
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.poteauxrace.common.Place
+import com.example.poteauxrace.common.PlaceR
+import com.example.poteauxrace.common.Pot
+import com.example.poteauxrace.network.PotApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import java.io.IOException
 
 class AppViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(AppStateUi())
@@ -13,25 +20,39 @@ class AppViewModel : ViewModel() {
     fun updateTeam(teamId: Int) {
         _uiState.update { appStateUi -> appStateUi.copy(teamId = teamId, isTeamChosen = true)  }
     }
-    fun updateGameStatus(status : Boolean = true) {
-        _uiState.update { appStateUi: AppStateUi -> appStateUi.copy(isGameLaunched = status ) }
+    private fun updateGameStatus(status : Boolean = true, date : Int = 0) {
+        _uiState.update { appStateUi: AppStateUi -> appStateUi.copy(isGameLaunched = status, startTime = date) }
     }
 
     fun updateClaimScreen(mode : Int = 0) {
         _uiState.update { appStateUi: AppStateUi -> appStateUi.copy(claimMode = mode ) }
     }
 
-    fun gamelaunchRequest() : Boolean{
-        /* Quand je saurais quoi faire je metttrais un tru ici"*/
-        return true
-    }
 
     private fun resetClaimPanel() {
         _uiState.update { appStateUi : AppStateUi-> appStateUi.copy(potNumberField = "", isEntryPotWrong = false) }
     }
 
-    fun claimRequest() {
 
+    private fun updatePotAndPlaces(poteaux : List<Pot>, places : List<PlaceR>) {
+        _uiState.update { appStateUi -> appStateUi.copy(pot = poteaux)}
+        places.forEach { place:PlaceR -> val olPl = _uiState.value.places[place.id]
+            _uiState.value.places[place.id] =Place(id=place.id, name = olPl.name, pts = olPl.pts, hasBeenClaimed = true, whoClaimedit = place.teamId ) }
+    }
+
+    fun updateRequest() {
+        viewModelScope.launch {
+            try  {
+                val update = PotApi.retrofitService.getUpdate()
+                if (!update.uIsReady){ updateGameStatus(status = false, date = 0)}
+                else {
+                    updateGameStatus(status = true, date = update.uStartTime)
+                    updatePotAndPlaces(update.uPoteaux, update.uMonuments)
+                }
+            } catch(e : IOException) {
+
+            }
+        }
     }
 
     fun onConfirmPot() : Boolean{

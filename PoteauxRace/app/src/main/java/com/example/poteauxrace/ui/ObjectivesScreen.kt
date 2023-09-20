@@ -12,6 +12,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.poteauxrace.common.Objective
 
@@ -31,9 +33,9 @@ fun ObjectiveScreen(modifier : Modifier = Modifier, onButtonClicked: () -> Unit,
 fun ObjectiveCard(modifier: Modifier = Modifier, name : String, pts : Int, desc : String) {
     Column (modifier = Modifier.fillMaxWidth()) {
         Row (modifier = modifier.fillMaxWidth()) {
-            Text(text = name)
+            Text(text = name, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.width(40.dp))
-            Text(text = "${pts} Points", color = MaterialTheme.colorScheme.primary)
+            Text(text = "${pts} Points", color = MaterialTheme.colorScheme.primary, textAlign = TextAlign.End, modifier = modifier.weight(1f), fontWeight = FontWeight.Bold)
         }
         Text(text = desc)
     }
