@@ -11,11 +11,12 @@ import androidx.navigation.compose.rememberNavController
 import com.example.poteauxrace.ui.AppViewModel
 import com.example.poteauxrace.ui.ClaimPanel
 import com.example.poteauxrace.ui.MapScreen
+import com.example.poteauxrace.ui.ObjectiveScreen
 import com.example.poteauxrace.ui.TeamSelect
 
 enum class AppScreen {
     TeamSelect,
-    WaitingForStart,
+    ObjectiveList,
     MainScreen,
     Claim
 }
@@ -34,17 +35,12 @@ fun App(modifier : Modifier = Modifier, viewModel : AppViewModel = viewModel()) 
     NavHost(
         navController = navController,
         modifier = Modifier,
-        startDestination = AppScreen.MainScreen.name
+        startDestination = destination
     ) {
         composable(route = AppScreen.TeamSelect.name) {
             TeamSelect(
                 onButtonClicked = {teamId : Int ->
                     viewModel.updateTeam(teamId)
-                    if (uiState.isGameLaunched) {
-                        navController.navigate(route = AppScreen.MainScreen.name)
-                    } else {
-                        navController.navigate(route = AppScreen.WaitingForStart.name)
-                    }
                 },
                 onDetectClicked = {
                     /* runBlocking {
@@ -57,28 +53,34 @@ fun App(modifier : Modifier = Modifier, viewModel : AppViewModel = viewModel()) 
                         }
                     }*/
 
-                }
+                },
+                teams = uiState.teams,
+                team = uiState.teamId
             )
         }
-        /*composable(route = AppScreen.WaitingForStart.name) {
-            WaitingScreen(modifier = Modifier ,
-                onGameLaunched = {
-                    viewModel.updateGameStatus(true)
-                    navController.navigate(route = AppScreen.MainScreen.name)
-                }
+        composable(route = AppScreen.ObjectiveList.name) {
+            ObjectiveScreen(modifier = Modifier ,
+                onButtonClicked = {navController.popBackStack()},
+                objectives = uiState.objectives
             )
-        }*/
+        }
         composable(route = AppScreen.MainScreen.name) {
             MapScreen(modifier = Modifier,
                 onButtonClicked = {
                     navController.navigate(route = AppScreen.Claim.name)
+                },
+                onButtonObjClicked = {
+                    navController.navigate(route = AppScreen.ObjectiveList.name)
                 }
             )
         }
         composable(route = AppScreen.Claim.name ) {
             ClaimPanel(
                 onNextButtonClicked = {
+                    val hasWorked = viewModel.onConfirmPot()
+                    if (hasWorked) {
                         navController.popBackStack(AppScreen.MainScreen.name, inclusive = false)
+                    }
                 },
                 onCancelButtonClicked = {
                     navController.popBackStack(route = AppScreen.MainScreen.name, inclusive = false)

@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -18,22 +20,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.poteauxrace.common.Team
 
 
 @Composable
-fun TeamSelect(modifier : Modifier = Modifier, onButtonClicked : (Int) -> Unit, onDetectClicked: () -> Unit) {
+fun TeamSelect(modifier : Modifier = Modifier, onButtonClicked : (Int) -> Unit, onDetectClicked: () -> Unit, teams : List<Team>, team : Int?) {
     Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+        if (team != null) {
+            Text(text = "Your Team is ${teams.get(team).name}")
+        }
         Text(text = "Choose your team", fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, fontSize = 24.sp, modifier = Modifier.padding(12.dp))
         Spacer(modifier = Modifier.height(24.dp))
-        Column() {
-            TeamButton(teamId = 0, teamName = "Red", onButtonClicked = onButtonClicked)
-            TeamButton(teamId = 1, teamName = "Blue", onButtonClicked = onButtonClicked)
-            TeamButton(teamId = 2, teamName = "Green", onButtonClicked = onButtonClicked)
-            TeamButton(teamId = 3, teamName = "Yellow", onButtonClicked = onButtonClicked)
-            TeamButton(teamId = 4, teamName = "Violet", onButtonClicked = onButtonClicked)
+        LazyColumn {
+            items(teams) { team : Team->
+                TeamButton(teamId = team.id, teamName = team.name, onButtonClicked = onButtonClicked)
+            }
         }
-        Button(onClick = onDetectClicked) {
-            Text(text = "Detecter changement de Game")
+        if (team != null) {
+            Button(onClick = onDetectClicked) {
+                Text(text = "Detect Game Launch")
+            }
         }
     }
 }

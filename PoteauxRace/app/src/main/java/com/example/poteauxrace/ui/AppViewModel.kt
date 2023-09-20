@@ -26,7 +26,7 @@ class AppViewModel : ViewModel() {
         return true
     }
 
-    fun resetClaimPanel() {
+    private fun resetClaimPanel() {
         _uiState.update { appStateUi : AppStateUi-> appStateUi.copy(potNumberField = "", isEntryPotWrong = false) }
     }
 
@@ -37,16 +37,18 @@ class AppViewModel : ViewModel() {
     fun onConfirmPot() : Boolean{
         if (_uiState.value.claimMode == 0) {
             val num = _uiState.value.potNumberField.toIntOrNull()
-            if (num!=null && num>0) {
-                return true
-            } else {
+            if (num != null && num > 0) {
                 resetClaimPanel()
-                _uiState.update { appStateUi : AppStateUi-> appStateUi.copy(isEntryPotWrong = true) }
-                return false
+                return true
             }
-        } else {
-            return true
+            _uiState.update { appStateUi: AppStateUi -> appStateUi.copy(isEntryPotWrong = true) }
+            return false
         }
+        return true
+    }
+
+    fun onCancelPot() {
+        resetClaimPanel()
     }
 
     fun onPotChange(value:String) : Unit {

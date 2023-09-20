@@ -39,7 +39,7 @@ fun ClaimPanel(
                     Text("Poteaux")
                 }
                 if (mode == 1) {
-                    Divider()
+                    Divider(thickness = 4.dp)
                 }
             }
             Column(modifier = Modifier.weight(0.5f),) {
@@ -57,7 +57,12 @@ fun ClaimPanel(
 
         if (mode == 0) {
             Column (modifier = Modifier.fillMaxSize().padding(16.dp)){
-                TextField(value = potFieldValue, onValueChange = {value :String -> onPotChange(value)}, label = {Text(text = "Nombre de poteaux")}, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal))
+                TextField(value = potFieldValue,
+                    onValueChange = {value :String -> onPotChange(value)},
+                    label = {Text(text = "Nombre de poteaux")},
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    singleLine = true
+                )
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Button(onClick = onCancelButtonClicked) {
                         Text(text = "Cancel")
