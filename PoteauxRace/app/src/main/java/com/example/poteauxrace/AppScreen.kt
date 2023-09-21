@@ -1,5 +1,6 @@
 package com.example.poteauxrace
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -43,16 +44,10 @@ fun App(modifier : Modifier = Modifier, viewModel : AppViewModel = viewModel()) 
                     viewModel.updateTeam(teamId)
                 },
                 onDetectClicked = {
-                    /* runBlocking {
-                        async {
-                            var isGameLaunched : Boolean = viewModel.gamelaunchRequest()
-                        }
-                        if (isGameLaunched.await()) {
-                            viewModel.updateGameStatus(true)
-                            navController.navigate(AppScreen.MainScreen.name)
-                        }
-                    }*/
-
+                    viewModel.updateRequest()
+                    if (uiState.isGameLaunched) {
+                        navController.navigate(AppScreen.MainScreen.name)
+                    }
                 },
                 teams = uiState.teams,
                 team = uiState.teamId
@@ -60,7 +55,7 @@ fun App(modifier : Modifier = Modifier, viewModel : AppViewModel = viewModel()) 
         }
         composable(route = AppScreen.ObjectiveList.name) {
             ObjectiveScreen(modifier = Modifier ,
-                onButtonClicked = {navController.popBackStack()},
+                onButtonClicked = {navController.popBackStack(AppScreen.MainScreen.name, inclusive = false)},
                 objectives = uiState.objectives
             )
         }
@@ -74,7 +69,10 @@ fun App(modifier : Modifier = Modifier, viewModel : AppViewModel = viewModel()) 
                 },
                 onButtonRefreshClicked = {
                     viewModel.updateRequest()
-                }
+                },
+                poteaux = uiState.pot,
+                monuments = uiState.places,
+                teams = uiState.teams
             )
         }
         composable(route = AppScreen.Claim.name ) {

@@ -1,5 +1,6 @@
 package com.example.poteauxrace.network
 
+import android.util.Log
 import com.example.poteauxrace.common.UpdateResponse
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
@@ -10,7 +11,7 @@ import retrofit2.http.POST
 
 
 private const val BASE_URL =
-    "localhost:8080"
+    "http://10.0.2.2:8080/"
 
 
 
@@ -27,11 +28,11 @@ interface PotAPIService {
 }
 
 object PotApi {
-    val retrofitService : PotAPIService by lazy {
+    val retrofitService: PotAPIService by lazy {
         retrofit.create(PotAPIService::class.java)
+
     }
 }
-
 
 
 

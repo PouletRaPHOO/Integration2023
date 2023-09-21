@@ -38,8 +38,8 @@ fun ClaimPanel(
                     onClick = { viewModel.updateClaimScreen(0) }) {
                     Text("Poteaux")
                 }
-                if (mode == 1) {
-                    Divider(thickness = 4.dp)
+                if (mode == 0) {
+                    Divider(thickness = 2.dp)
                 }
             }
             Column(modifier = Modifier.weight(0.5f),) {
@@ -49,8 +49,8 @@ fun ClaimPanel(
                     onClick = { viewModel.updateClaimScreen(1) }) {
                     Text("Monuments")
                 }
-                if (mode == 0) {
-                    Divider()
+                if (mode == 1) {
+                    Divider(thickness = 2.dp)
                 }
             }
         }

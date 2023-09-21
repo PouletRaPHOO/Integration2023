@@ -1,10 +1,12 @@
 package com.example.poteauxrace.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.poteauxrace.common.Place
 import com.example.poteauxrace.common.PlaceR
 import com.example.poteauxrace.common.Pot
+import com.example.poteauxrace.common.UpdateResponse
 import com.example.poteauxrace.network.PotApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +22,7 @@ class AppViewModel : ViewModel() {
     fun updateTeam(teamId: Int) {
         _uiState.update { appStateUi -> appStateUi.copy(teamId = teamId, isTeamChosen = true)  }
     }
-    private fun updateGameStatus(status : Boolean = true, date : Int = 0) {
+    fun updateGameStatus(status : Boolean = true, date : Int = 0) {
         _uiState.update { appStateUi: AppStateUi -> appStateUi.copy(isGameLaunched = status, startTime = date) }
     }
 
@@ -50,7 +52,9 @@ class AppViewModel : ViewModel() {
                     updatePotAndPlaces(update.uPoteaux, update.uMonuments)
                 }
             } catch(e : IOException) {
-
+                Log.d(null, e.message?:"ouais chef")
+            } catch (e : Error){
+                Log.d(null, e.message?:"ouais chef Error")
             }
         }
     }
