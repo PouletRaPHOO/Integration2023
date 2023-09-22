@@ -1,11 +1,13 @@
 package com.example.poteauxrace.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.List
 import androidx.compose.material.icons.rounded.Refresh
@@ -23,6 +25,7 @@ import com.example.poteauxrace.common.Pot
 import com.example.poteauxrace.common.Team
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_CYAN
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
@@ -52,13 +55,35 @@ fun MapScreen(modifier :Modifier = Modifier,
         }
         Box(modifier = Modifier.padding(paddingValues)) {
             GoogleMap(cameraPositionState = cameraPositionState) {
-                poteaux.forEach{pot : Pot ->
+                Log.d(null, "Longueur ${poteaux.size}")
+                for (pot in poteaux) {
+
                     Marker(
-                        state = MarkerState(position = LatLng(pot.pLocation[0],pot.pLocation[1])),
+                        state = MarkerState(
+                            position = LatLng(
+                                pot.pLocation[0],
+                                pot.pLocation[1]
+                            )
+                        ),
                         title = "Positionned by team ${teams[pot.pTeam].name}}",
                         icon = BitmapDescriptorFactory.defaultMarker(teams[pot.pTeam].hue)
                     )
                 }
+
+                for (mon in monuments) {
+
+                    Marker(
+                        state = MarkerState(
+                            position = LatLng(
+                                mon.location[0],
+                                mon.location[1]
+                            )
+                        ),
+                        title = mon.name,
+                        icon = BitmapDescriptorFactory.defaultMarker(36f)
+                    )
+                }
+
             }
         }
     }

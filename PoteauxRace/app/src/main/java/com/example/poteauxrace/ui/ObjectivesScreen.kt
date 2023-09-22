@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -34,6 +35,7 @@ fun ObjectiveScreen(modifier : Modifier = Modifier, onButtonClicked: () -> Unit,
         LazyColumn {
             items(objectives) {obj ->
                 ObjectiveCard(name = obj.name, pts = obj.pts, desc = obj.description, modifier = Modifier.padding((it)) )
+                Divider(thickness = 2.dp)
             }
         }
     }

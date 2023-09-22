@@ -10,3 +10,14 @@ data class UpdateResponse (
     val uScores : List<List<Int>>,
     val  uStartTime : Int,
 )
+
+
+
+@Serializable
+data class PotClaim (
+    val tag : String = "u",
+    val cLoc : List<Double>,
+    val cDate : Int,
+    val cpNb : Int,
+    val cTeam : Int,
+)

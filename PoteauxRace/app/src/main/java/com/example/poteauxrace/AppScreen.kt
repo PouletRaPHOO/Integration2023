@@ -1,5 +1,7 @@
 package com.example.poteauxrace
 
+import android.app.Activity
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -23,7 +25,7 @@ enum class AppScreen {
 }
 
 @Composable
-fun App(modifier : Modifier = Modifier, viewModel : AppViewModel = viewModel()) {
+fun App(modifier : Modifier = Modifier, viewModel : AppViewModel = viewModel(), context: Activity) {
     val navController = rememberNavController()
 
     val uiState by viewModel.uiState.collectAsState()
@@ -50,7 +52,8 @@ fun App(modifier : Modifier = Modifier, viewModel : AppViewModel = viewModel()) 
                     }
                 },
                 teams = uiState.teams,
-                team = uiState.teamId
+                team = uiState.teamId?:0,
+
             )
         }
         composable(route = AppScreen.ObjectiveList.name) {
@@ -60,6 +63,7 @@ fun App(modifier : Modifier = Modifier, viewModel : AppViewModel = viewModel()) 
             )
         }
         composable(route = AppScreen.MainScreen.name) {
+            viewModel.getCurrentLocationUser(context)
             MapScreen(modifier = Modifier,
                 onButtonClicked = {
                     navController.navigate(route = AppScreen.Claim.name)
@@ -78,7 +82,7 @@ fun App(modifier : Modifier = Modifier, viewModel : AppViewModel = viewModel()) 
         composable(route = AppScreen.Claim.name ) {
             ClaimPanel(
                 onNextButtonClicked = {
-                    val hasWorked = viewModel.onConfirmPot()
+                    val hasWorked = viewModel.onConfirmPot(context = context)
                     if (hasWorked) {
                         navController.popBackStack(AppScreen.MainScreen.name, inclusive = false)
                     }
@@ -90,7 +94,7 @@ fun App(modifier : Modifier = Modifier, viewModel : AppViewModel = viewModel()) 
                 viewModel = viewModel,
                 mode = uiState.claimMode,
                 potFieldValue = uiState.potNumberField,
-                onPotChange = {it : String -> viewModel.onPotChange(it) }
+                onPotChange = {it : String -> viewModel.onPotChange(it)}
             )
         }
     }

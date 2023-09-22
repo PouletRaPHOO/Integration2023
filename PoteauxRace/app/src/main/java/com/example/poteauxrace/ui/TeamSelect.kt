@@ -24,11 +24,12 @@ import com.example.poteauxrace.common.Team
 
 
 @Composable
-fun TeamSelect(modifier : Modifier = Modifier, onButtonClicked : (Int) -> Unit, onDetectClicked: () -> Unit, teams : List<Team>, team : Int?) {
+fun TeamSelect(modifier : Modifier = Modifier, onButtonClicked : (Int) -> Unit, onDetectClicked: () -> Unit, teams : List<Team>, team : Int) {
     Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
         if (team != null) {
             Text(text = "Your Team is ${teams.get(team).name}")
         }
+
         Text(text = "Choose your team", fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, fontSize = 24.sp, modifier = Modifier.padding(12.dp))
         Spacer(modifier = Modifier.height(24.dp))
         LazyColumn {
@@ -46,7 +47,10 @@ fun TeamSelect(modifier : Modifier = Modifier, onButtonClicked : (Int) -> Unit, 
 
 @Composable
 fun TeamButton(modifier: Modifier = Modifier, teamId:Int, teamName :String, onButtonClicked : (Int) -> Unit) {
-    Button(onClick = {onButtonClicked(teamId)}, modifier = Modifier.fillMaxWidth().padding(24.dp).background(color = MaterialTheme.colorScheme.primaryContainer )) {
+    Button(onClick = {onButtonClicked(teamId)}, modifier = Modifier
+        .fillMaxWidth()
+        .padding(24.dp)
+        .background(color = MaterialTheme.colorScheme.primaryContainer)) {
         Text(text=teamName, modifier = Modifier.padding(15.dp))
     }
 }
