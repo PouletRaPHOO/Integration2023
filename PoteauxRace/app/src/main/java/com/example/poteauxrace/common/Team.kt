@@ -8,7 +8,9 @@ data class Team(val id : Int = 0, val name : String, val color : Color,val hue :
 @Serializable
 data class PlaceR(val teamId: Int, val id:Int, val name:String, val pLocation : List<Int>)
 
-data class Place(val id:Int, val name:String, val pts : Int, val hasBeenClaimed : Boolean = false, val whoClaimedit : Int?, val location : List<Double>)
+data class Place(val id:Int, val name:String, val pts : Int, val hasBeenClaimed : Boolean = false, val whoClaimedit : Int?, val location : List<Double>, val distance:  Double? = null, val description: String? = null)
+
+
 
 data class Objective(val name : String, val description: String, val pts : Int)
 @Serializable

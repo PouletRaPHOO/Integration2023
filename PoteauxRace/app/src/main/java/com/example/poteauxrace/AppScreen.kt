@@ -76,7 +76,9 @@ fun App(modifier : Modifier = Modifier, viewModel : AppViewModel = viewModel(), 
                 },
                 poteaux = uiState.pot,
                 monuments = uiState.places,
-                teams = uiState.teams
+                teams = uiState.teams,
+                startTime = uiState.startTime,
+                teamId = uiState.teamId?:0
             )
         }
         composable(route = AppScreen.Claim.name ) {
@@ -94,7 +96,17 @@ fun App(modifier : Modifier = Modifier, viewModel : AppViewModel = viewModel(), 
                 viewModel = viewModel,
                 mode = uiState.claimMode,
                 potFieldValue = uiState.potNumberField,
-                onPotChange = {it : String -> viewModel.onPotChange(it)}
+                onPotChange = {it : String -> viewModel.onPotChange(it)},
+                idChosen = uiState.idMonumentChosen,
+                location = uiState.location,
+                monuments = uiState.places,
+                onMonCLicked = {viewModel.updateChoosenMonument(it)},
+                onNextButtonClickedMon = {
+                    val hasWorked = viewModel.onConfirmMon(context = context)
+                    if (hasWorked) {
+                        navController.popBackStack(AppScreen.MainScreen.name, inclusive = false)
+                    }
+                },
             )
         }
     }

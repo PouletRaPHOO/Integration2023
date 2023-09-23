@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.poteauxrace.common.MonClaim
 import com.example.poteauxrace.common.Place
 import com.example.poteauxrace.common.PlaceR
 import com.example.poteauxrace.common.Pot
@@ -38,7 +39,7 @@ class AppViewModel : ViewModel() {
         _uiState.update { appStateUi -> appStateUi.copy(teamId = teamId, isTeamChosen = true) }
     }
 
-    private fun updateGameStatus(status: Boolean = true, date: Int = 0) {
+    private fun updateGameStatus(status: Boolean = true, date: Long = 0) {
         _uiState.update { appStateUi: AppStateUi ->
             appStateUi.copy(
                 isGameLaunched = status,
@@ -55,8 +56,11 @@ class AppViewModel : ViewModel() {
     private fun resetClaimPanel() {
         _uiState.update { appStateUi: AppStateUi ->
             appStateUi.copy(
+                hasMonumentBeenChosed = false,
                 potNumberField = "",
-                isEntryPotWrong = false
+                isEntryPotWrong = false,
+                idMonumentChosen = 0,
+                claimMode = 0
             )
         }
     }
@@ -97,46 +101,44 @@ class AppViewModel : ViewModel() {
     }
 
     fun onConfirmPot(context: Activity): Boolean {
-        if (_uiState.value.claimMode == 0) {
-            val num = _uiState.value.potNumberField.toIntOrNull()
-            if (num != null && num > 0) {
-                resetClaimPanel()
 
-                getCurrentLocationUser(context)
+        val num = _uiState.value.potNumberField.toIntOrNull()
+        if (num != null && num > 0) {
+            resetClaimPanel()
 
-                val json =
-                    Json.encodeToString(PotClaim("ClaimPoteau", listOf(_uiState.value.location.latitude, _uiState.value.location.longitude), 160000, 5, 2))
-                // Create RequestBody ( We're not using any converter, like GsonConverter, MoshiConverter e.t.c, that's why we use RequestBody )
-                val requestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
-                CoroutineScope(Dispatchers.IO).launch {
-                    // Do the POST request and get response
-                    val response = PotApi.retrofitService.postClaim(requestBody)
+            getCurrentLocationUser(context)
 
-                    withContext(Dispatchers.Main) {
-                        if (response.isSuccessful) {
-                            // Convert raw JSON to pretty JSON using GSON library
-                            val gson = GsonBuilder().setPrettyPrinting().create()
-                            val prettyJson = gson.toJson(
-                                JsonParser.parseString(
-                                    response.body()
-                                        ?.string() // About this thread blocking annotation : https://github.com/square/retrofit/issues/3255
-                                )
+            val json =
+                Json.encodeToString(PotClaim("ClaimPoteau", listOf(_uiState.value.location.latitude, _uiState.value.location.longitude), 160000, 5, 2))
+            // Create RequestBody ( We're not using any converter, like GsonConverter, MoshiConverter e.t.c, that's why we use RequestBody )
+            val requestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
+            CoroutineScope(Dispatchers.IO).launch {
+                // Do the POST request and get response
+                val response = PotApi.retrofitService.postClaim(requestBody)
+
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful) {
+                        // Convert raw JSON to pretty JSON using GSON library
+                        val gson = GsonBuilder().setPrettyPrinting().create()
+                        val prettyJson = gson.toJson(
+                            JsonParser.parseString(
+                                response.body()
+                                    ?.string() // About this thread blocking annotation : https://github.com/square/retrofit/issues/3255
                             )
-                            Log.d("Pretty Printed JSON :", prettyJson)
+                        )
+                        Log.d("Pretty Printed JSON :", prettyJson)
 
-                        } else {
+                    } else {
 
-                            Log.e("RETROFIT_ERROR", response.code().toString())
+                        Log.e("RETROFIT_ERROR", response.code().toString())
 
-                        }
                     }
                 }
-                return true
             }
-            _uiState.update { appStateUi: AppStateUi -> appStateUi.copy(isEntryPotWrong = true) }
-            return false
+            return true
         }
-        return true
+        _uiState.update { appStateUi: AppStateUi -> appStateUi.copy(isEntryPotWrong = true) }
+        return false
     }
 
     fun onCancelPot() {
@@ -184,4 +186,46 @@ class AppViewModel : ViewModel() {
             }
         }
     }
+
+    fun updateChoosenMonument(id : Int) {
+        _uiState.update { appStateUi -> appStateUi.copy(idMonumentChosen = id, hasMonumentBeenChosed = true) }
+    }
+
+    fun onConfirmMon(context: Activity): Boolean {
+        if (_uiState.value.hasMonumentBeenChosed) {
+            resetClaimPanel()
+            val json =
+                Json.encodeToString(MonClaim("ClaimMonument", 160000, cTeam = _uiState.value.teamId?: 0, cMonId = _uiState.value.idMonumentChosen))
+            // Create RequestBody ( We're not using any converter, like GsonConverter, MoshiConverter e.t.c, that's why we use RequestBody )
+            val requestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
+            CoroutineScope(Dispatchers.IO).launch {
+                // Do the POST request and get response
+                val response = PotApi.retrofitService.postClaimMon(requestBody)
+
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful) {
+                        // Convert raw JSON to pretty JSON using GSON library
+                        val gson = GsonBuilder().setPrettyPrinting().create()
+                        val prettyJson = gson.toJson(
+                            JsonParser.parseString(
+                                response.body()
+                                    ?.string() // About this thread blocking annotation : https://github.com/square/retrofit/issues/3255
+                            )
+                        )
+                        Log.d("Pretty Printed JSON :", prettyJson)
+
+                    } else {
+
+                        Log.e("RETROFIT_ERROR", response.code().toString())
+
+                    }
+                }
+            }
+            return true
+        } else {
+            return false
+        }
+    }
+
+
 }

@@ -19,7 +19,7 @@ import retrofit2.http.POST
 
 
 private const val BASE_URL =
-    "http://10.0.2.2:8080/"
+    "https://96d1-2a01-cb14-cd9-7500-42f6-a201-7bd9-1105.ngrok.io/"
 
 
 
@@ -34,6 +34,10 @@ interface PotAPIService {
     @POST("claim")
     @Headers("Content-Type: application/json")
     suspend fun postClaim(@Body body : RequestBody) : Response<ResponseBody>
+
+    @POST("claim")
+    @Headers("Content-Type: application/json")
+    suspend fun postClaimMon(@Body body : RequestBody) : Response<ResponseBody>
 }
 
 object PotApi {

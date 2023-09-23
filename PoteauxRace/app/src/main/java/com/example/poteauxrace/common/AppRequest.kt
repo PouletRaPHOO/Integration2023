@@ -8,7 +8,7 @@ data class UpdateResponse (
     val uPoteaux : List<Pot>,
     val uMonuments : List<PlaceR>,
     val uScores : List<List<Int>>,
-    val  uStartTime : Int,
+    val  uStartTime : Long,
 )
 
 
@@ -17,7 +17,14 @@ data class UpdateResponse (
 data class PotClaim (
     val tag : String = "u",
     val cLoc : List<Double>,
-    val cDate : Int,
+    val cDate : Long,
     val cpNb : Int,
+    val cTeam : Int,
+)
+@Serializable
+data class MonClaim (
+    val tag : String = "u",
+    val cDate : Int,
+    val cMonId : Int,
     val cTeam : Int,
 )
